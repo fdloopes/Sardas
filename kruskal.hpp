@@ -1,7 +1,7 @@
 /*
  * File: kruskal.hpp
  * Author: Felipe Lopes
- * Created on 25 de Junho de 2016, 20:39
+ * Created on 25 de Junho de 2016, 18:00
  */
 
 #ifndef KRUSKAL_HPP
@@ -13,18 +13,18 @@ using namespace std;
 class kruskal
 {
 public:
-    int n;      //numero de arestas no grafo
-    int noe;    //numero de arestas no grafo
-    float weight[100*99];   // armazena os valores reais de todos pesos
-    float w;            // Armazena o somatório dos pesos
-    int graph_edge[100][3]; // grafo de arestas
+    int n;      // number of vertices in the graph.
+    int noe;    // number of edges in the graph
+    float weight[100*99];   // stores the actual values of all weights.
+    float w;            // Store the sum of the weights.
+    int graphEdge[100][3]; // graph of edges
 
-    int sets[900][900]; // Matriz que representa as subarvores
-    int top[100];   // Armazena o total de ligações que cada subarvore possui
+    int sets[101][900]; // Array that represents the subsets.
+    int top[101];   // Store the total size of each subset.
 
     kruskal();
-    void sortEdges();  // Ordena arestas
-    void algorithm();   // Algoritmo de kruskal
-    int findNode(int n);   // Busca nó na subarvore
+    void sortEdges();  // Ordering edges by weight
+    void algorithm();   // Kruskal's algorithm
+    int findSet(int n);  // vertice research on array of subsets.
 };
 #endif

@@ -14,7 +14,7 @@ using namespace std;
 
 class Edge{
 protected:
-	int coordinate;	// Coordinate of the vertex that connects
+	int coordinate;	// Coordinate of vertex that connects
 	double weight;	// Weight this edge
 
 public:
