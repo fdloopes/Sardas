@@ -5,7 +5,6 @@
  * Created on 21 de Junho de 2016, 20:00
  */
 
-
 #ifndef VERTEX_HPP
 #define VERTEX_HPP
 
@@ -17,14 +16,16 @@ using namespace std;
 
 class Vertex{
 protected:
-	float x;	// Armazena coordenada de x
-	float y;	// Armazena coordenada de y	
+	float x;	// Store x coordinate.
+	float y;	// Store y coordinate.
 
 public:
-	vector<Edge> edges;
-	Vertex();
+	vector<Edge> edges;	// vector edges of the vertice.
+	Vertex();	// Constructor this class
+	// Sets coordinates X and Y
 	void setX(float x);
 	void setY(float y);
+	// Gets coordinates X and Y
 	float getX();
 	float getY();
 };

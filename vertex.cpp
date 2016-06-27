@@ -4,15 +4,13 @@
  * Created on 21 de Junho de 2016, 20:09
  */
 
-
 #include <iostream>
-#include <vector>
 #include "vertex.hpp"
 
 Vertex::Vertex(){ }
 
 //================================
-// Sets coordenate
+// Sets coordinates X and Y
 void Vertex::setX(float x){
 	this->x = x;
 }
@@ -23,7 +21,7 @@ void Vertex::setY(float y){
 // ===============================
 
 //================================
-// Gets coordenate
+// Gets coordinates X and Y
 float Vertex::getX(){
 	return this->x;
 }

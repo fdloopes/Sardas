@@ -5,29 +5,27 @@
  * Created on 22 de Junho de 2016, 16:31
  */
 
-
 #include <iostream>
-#include <vector>
-#include "linha.hpp"
+#include "edge.hpp"
 
 Edge::Edge(){ }
 
 //===============================
-// Sets: Coordenate 
+// Sets: Coordenate and weight
 void Edge::setCoordinate(int x){
-	this->coordinate = x;
+	this->coordinate = x;	// connection to coordinate
 }
 
 void Edge::setWeight(float w){
-	this->weight = w;
+	this->weight = w;	// weight this edge
 }
 
-// Retorna peso da aresta
+//===============================
+// Gets: Coordenate and weight
 float Edge::getWeight(){
 	return this->weight;
 }
 
-// Retorna coordenada que faz ligação
-int Edge::getCoordenate(){
+int Edge::getCoordinate(){
 	return this->coordinate;
 }

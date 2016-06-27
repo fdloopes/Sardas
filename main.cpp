@@ -10,22 +10,19 @@
 #include <stdlib.h> 
 #include <vector>
 #include <math.h>
-#include "sarda.cpp"
-#include "linha.cpp"
+#include "vertex.cpp"
+#include "edge.cpp"
 #include "kruskal.cpp"
 
 using namespace std;
 
-void quickSort(Sarda *ponto, int p, int r);	// Algori
-void makeSet(vector<Sarda>  vertice , Sarda *ponto);
-void adicionaVetor(vector<Sarda> vertice,Linha aresta, vector<int> *vet, int aux);
+void makeSet(vector<Vertex>  vertice, Vertex *vertex); // add edges to the vertice.
 
 int main(int argc, char **argv){
-	float x;
-	float y;
-	float peso;
-	kruskal ptr;
-	vector<Sarda>  sardas;
+	float x; // Store coordinate X
+	float y; // Store coordinate Y
+	kruskal kruskal;	// kruskal object
+	vector<Vertex>  vertices; // Vector of vertex
 
     if(argc !=2) 
     { 
@@ -39,17 +36,13 @@ int main(int argc, char **argv){
 	if(arq == NULL)
 			printf("Erro, nao foi possivel abrir o arquivo\n");
 	else{
-		fscanf(arq,"%d\n",&ptr.n);
-		sardas.resize(ptr.n); // Cria com a metade do tamanho passado
-    // Cria a matriz e adiciona os valores x y 
-		for(int i = 0; i < ptr.n;i++){
+		fscanf(arq,"%d\n",&kruskal.n);
+		vertices.resize(kruskal.n); // Cria com a metade do tamanho passado
+   		 // Cria a matriz e adiciona os valores x y 
+		for(int i = 0; i < kruskal.n;i++){
 			if((fscanf(arq,"%f %fn", &x, &y))!=EOF){
-				sardas[i].setX(x);
-				sardas[i].setY(y);
-				if( i == 0)
-					sardas[i].setW(0); // Define o primeiro vértice com prioridade
-				else
-					sardas[i].setW(-1); // -1 para representar o infinito ou não definido
+				vertices[i].setX(x);
+				vertices[i].setY(y);
 			}
 		}
 
@@ -59,78 +52,48 @@ int main(int argc, char **argv){
 
 	// =====================================================
 
-	for(int i=0; i < ptr.n; i++){
-		makeSet(sardas,&sardas[i]); // Cria o grafo completo com vetor de arestas com pesos e vertices destino
+	for(int i=0; i < kruskal.n; i++){
+		makeSet(vertices,&vertices[i]); // Cria o grafo completo com vetor de edges com ws e vertices destino
 	}
-	ptr.noe=0;
+	kruskal.noe=0;
 	
-	for(int i=0;i<ptr.n;i++){
-	    for(int j = 0;j<ptr.n;j++){
-		    peso=(float)sardas[i].arestas[j].getWeight();
-		    if(peso!=0){
-		               	ptr.graph_edge[ptr.noe][0]=(int)i;
-		                ptr.graph_edge[ptr.noe][1]=(int)sardas[i].arestas[j].getCoordenada();
-		                ptr.graph_edge[ptr.noe][2]=(int)peso;
-		                ptr.weight[ptr.noe] = (float)peso;
-		       			ptr.noe=ptr.noe+1;
+	for(int i=0;i<kruskal.n;i++){
+	    for(int j = 0;j<kruskal.n;j++){
+		    if(vertices[i].edges[j].getWeight()!=0){
+		               	kruskal.graph_edge[kruskal.noe][0]=(int)i+1;
+		                kruskal.graph_edge[kruskal.noe][1]=(int)vertices[i].edges[j].getCoordinate()+1;
+		                kruskal.graph_edge[kruskal.noe][2]=(int)vertices[i].edges[j].getWeight();
+		                kruskal.weight[kruskal.noe] = vertices[i].edges[j].getWeight();
+		       			kruskal.noe+=1;
 		       	}
 	        }
-       }
+       	}
 
-	    ptr.sort_edges();
-	   	ptr.algorithm();
+	    kruskal.sortEdges();
+	   	kruskal.algorithm();
 
-	   	//cout << "Arvore resultante: " << endl;
-	  	//ptr.print_min_span_t();
 	   	std::cout.precision(5);
-	  	cout << "Custo total: " << ptr.w << endl;
+	  	cout << "Custo total: " << kruskal.w << endl;
 
 		return 0;
 }
 
-// ================================================================
-// Algoritmo de ordenação para o vetor de pesos das arestas
-//=================================================================
-void quickSort(Sarda *ponto, int esq, int dir){
-    int pivo = esq,i,ch,j;
-    Linha aresta;
-    for( i = esq+1; i<= dir; i++){
-        j = i;
-        if(ponto->arestas[i].getWeight() < ponto->arestas[pivo].getWeight() && ponto->arestas[i].getWeight() > 0){
-         	aresta = ponto->arestas[j];
-         while(j > pivo){    
-            ponto->arestas[j] = ponto->arestas[j-1];
-            j--;
-         }
-         ponto->arestas[j] = aresta;
-         pivo++;        
-        }  
-    }
-    if(pivo-1 >= esq){
-        quickSort(ponto,esq,pivo-1);
-    }
-    if(pivo+1 <= dir){
-        quickSort(ponto,pivo+1,dir);
-    }
- }
-
-// Cria um grafo completo, adiciona um vertor de arestas com pesos para cada vertice
+// Cria um grafo completo, adiciona um vertor de edges com ws para cada vertice
 // ================================================================================
-void makeSet(vector<Sarda> vertice,Sarda *ponto){
-	long double peso;
-	Linha aresta;
+void makeSet(vector<Vertex> vertice,Vertex *vertex){
+	float w;
+	Edge edge;
 	for(int i = 0 ; i < vertice.size(); i++){
-		if( (vertice[i].getX() != ponto->getX()) || vertice[i].getY() != ponto->getY())  {
-			peso = pow(ponto->getX() - vertice[i].getX(),2) + pow((ponto->getY() - vertice[i].getY()),2);
-			if(peso < 0)
-				peso *= -1;
-			peso = sqrt(peso);
+		if( (vertice[i].getX() != vertex->getX()) || vertice[i].getY() != vertex->getY())  {
+			w = pow(vertex->getX() - vertice[i].getX(),2) + pow((vertex->getY() - vertice[i].getY()),2);
+			if(w < 0)
+				w *= -1;
+			w = sqrt(w);
 
-			aresta.setCoordenada(i);
-			aresta.setWeight(peso);
-			if(aresta.getWeight() > 0)
-				ponto->arestas.push_back(aresta);
+			edge.setCoordinate(i);
+			edge.setWeight(w);
+			if(edge.getWeight() > 0)
+				vertex->edges.push_back(edge);
 		}
 	}
-	quickSort(ponto,0,ponto->arestas.size());
 }
